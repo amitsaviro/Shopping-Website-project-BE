@@ -3,7 +3,7 @@ package com.firstProject.repository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firstProject.model.Customer;
-import com.firstProject.model.CustomerStatus;
+import com.firstProject.model.Item;
 import com.firstProject.repository.cache.CacheRepository;
 import com.firstProject.repository.mapper.CustomerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,102 +31,87 @@ public class CustomerRepositoryImpl implements CustomerRepository {
     private ObjectMapper objectMapper;
 
     @Override
-    public Long createCustomer(Customer customer) {
-        String sql = "INSERT INTO " + CUSTOMER_TABLE_NAME + " " + "(first_name, last_name, email, status) values (?, ?, ?, ?)";
+    public Long createCustomer(Customer customer)throws Exception {
+        String sql = "INSERT INTO " + CUSTOMER_TABLE_NAME + " " + "(first_name, last_name, email, phone_number, address, user_name, password) values (?, ?, ?, ?, ?, ?, ?)";
         jdbcTemplate.update(
                 sql,
                 customer.getFirstName(),
                 customer.getLastName(),
                 customer.getEmail(),
-                customer.getCustomerStatus().name()
+                customer.getPhoneNumber(),
+                customer.getAddress(),
+                customer.getUserName(),
+                customer.getPassword()
         );
         return jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
     }
 
     @Override
     public void updateCustomer(Customer customer) {
-        String cacheKey = createCustomerIdCacheKey(customer.getId());
-        if(cacheRepository.isKeyExists(cacheKey)){
-            cacheRepository.removeCacheEntity(cacheKey);
-        }
-        String sql = "UPDATE " + CUSTOMER_TABLE_NAME + " SET first_name=?, last_name=?, email=?, status=? WHERE id=?";
+        //String cacheKey = createCustomerIdCacheKey(customer.getId());
+        //if(cacheRepository.isKeyExists(cacheKey)){
+       //     cacheRepository.removeCacheEntity(cacheKey);
+      //  }
+        String sql = "UPDATE " + CUSTOMER_TABLE_NAME + " SET first_name=?, last_name=?, email=?, phone_number=?, address=?, user_name=?, password=? WHERE id=?";
         jdbcTemplate.update(
             sql,
-            customer.getFirstName(),
-            customer.getLastName(),
-            customer.getEmail(),
-            customer.getCustomerStatus().name(),
-            customer.getId()
+                customer.getFirstName(),
+                customer.getLastName(),
+                customer.getEmail(),
+                customer.getPhoneNumber(),
+                customer.getAddress(),
+                customer.getUserName(),
+                customer.getPassword(),
+                customer.getId()
         );
     }
 
     @Override
     public void deleteCustomerById(Long id) {
-        String cacheKey = createCustomerIdCacheKey(id);
-        if(cacheRepository.isKeyExists(cacheKey)){
-            cacheRepository.removeCacheEntity(cacheKey);
-        }
+       // String cacheKey = createCustomerIdCacheKey(id);
+       // if(cacheRepository.isKeyExists(cacheKey)){
+        //    cacheRepository.removeCacheEntity(cacheKey);
+      //  }
         String sql = "DELETE FROM " + CUSTOMER_TABLE_NAME + " WHERE id=?";
         jdbcTemplate.update(sql, id);
     }
 
     @Override
     public Customer getCustomerById(Long id) throws JsonProcessingException {
-        String cacheKey = createCustomerIdCacheKey(id);
-        if(cacheRepository.isKeyExists(cacheKey)){
-            String customer = cacheRepository.getCacheEntity(cacheKey);
-            return objectMapper.readValue(customer, Customer.class);
-        } else {
+       // String cacheKey = createCustomerIdCacheKey(id);
+      //  if(cacheRepository.isKeyExists(cacheKey)){
+           // String customer = cacheRepository.getCacheEntity(cacheKey);
+           // return objectMapper.readValue(customer, Customer.class);
+      //  } else {
             String sql = "SELECT * FROM " + CUSTOMER_TABLE_NAME + " WHERE id=?";
-            try {
+          //  try {
                 Customer customer = jdbcTemplate.queryForObject(sql, customerMapper, id);
-                String customerAsString = objectMapper.writeValueAsString(customer);
-                cacheRepository.createCacheEntity(cacheKey, customerAsString);
+              //  String customerAsString = objectMapper.writeValueAsString(customer);
+             //   cacheRepository.createCacheEntity(cacheKey, customerAsString);
                 return customer;
-            } catch (EmptyResultDataAccessException e) {
-                System.out.println("Empty Data Warning");
-                return null;
-            }
-        }
+          //  } catch (EmptyResultDataAccessException e) {
+            //    System.out.println("Empty Data Warning");
+             //   return null;
+          //  }
+      //  }
     }
-
     @Override
-    public List<Customer> getAllCustomersByFirstName(String firstName) {
-        String sql = "SELECT * FROM " + CUSTOMER_TABLE_NAME + " WHERE first_name LIKE %?%";
+    public List<Customer> getAllCustomer() throws JsonProcessingException {
+        String sql = "SELECT * FROM " +CUSTOMER_TABLE_NAME;
+        return jdbcTemplate.query(sql, customerMapper);
+    }
+    @Override
+    public Customer findUserByUsername(String username) {
+        String sql = "SELECT * FROM " + CUSTOMER_TABLE_NAME + " WHERE user_name=?";
         try {
-            return jdbcTemplate.query(sql, customerMapper, firstName);
-        } catch (EmptyResultDataAccessException e) {
-            System.out.println("Empty Data Warning");
+            return jdbcTemplate.queryForObject(sql, new CustomerMapper(), username);
+        } catch (EmptyResultDataAccessException error) {
             return null;
         }
     }
-
-    @Override
-    public List<Long> getAllCustomerIdsByFirstName(String firstName) {
-        System.out.println(firstName);
-        String sql = "SELECT c.id FROM " + CUSTOMER_TABLE_NAME + " AS c WHERE c.first_name LIKE '%" + firstName + "%'";
-        try {
-           return jdbcTemplate.queryForList(sql, Long.class);
-        } catch (EmptyResultDataAccessException e) {
-            System.out.println("Empty Data Warning");
-            return null;
-        }
-    }
-
-    @Override
-    public List<Customer> getAllCustomersByStatus(CustomerStatus customerStatus) {
-        String sql = "SELECT * FROM " + CUSTOMER_TABLE_NAME + " WHERE status = ?";
-        try {
-            return jdbcTemplate.query(sql, customerMapper, customerStatus.name());
-        } catch (EmptyResultDataAccessException e) {
-            System.out.println("Empty Data Warning");
-            return null;
-        }
-    }
-
-    private String createCustomerIdCacheKey(Long customerId){
-        return "customer.id: " + customerId;
-    }
+  //  private String createCustomerIdCacheKey(Long customerId){
+      //  return "customer.id: " + customerId;
+  //  }
 }
 
 

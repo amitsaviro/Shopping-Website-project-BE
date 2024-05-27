@@ -5,16 +5,26 @@ public class Customer {
     private String firstName;
     private String lastName;
     private String email;
-    private CustomerStatus customerStatus;
+    private String phoneNumber;
+
+    private String address;
+
+    private String userName;
+
+    private String password;
 
     public Customer(){}
 
-    public Customer(Long id, String firstName, String lastName, String email, CustomerStatus customerStatus) {
+    public Customer(Long id, String firstName, String lastName, String email ,String phoneNumber, String address, String userName, String password) {
         this.id = id;
         this.firstName = firstName;
         this.lastName = lastName;
         this.email = email;
-        this.customerStatus = customerStatus;
+        this.phoneNumber=phoneNumber;
+        this.address=address;
+        this.userName=userName;
+        this.password=password;
+
     }
 
     public Long getId() {
@@ -33,10 +43,21 @@ public class Customer {
         return email;
     }
 
-    public CustomerStatus getCustomerStatus() {
-        return customerStatus;
+    public String getPhoneNumber() {
+        return phoneNumber;
     }
 
+    public String getAddress() {
+        return address;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public String getPassword() {
+        return password;
+    }
     public void setId(Long id) {
         this.id = id;
     }
@@ -53,7 +74,19 @@ public class Customer {
         this.email = email;
     }
 
-    public void setCustomerStatus(CustomerStatus customerStatus) {
-        this.customerStatus = customerStatus;
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }
