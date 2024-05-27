@@ -1,7 +1,6 @@
 package com.firstProject.repository.mapper;
 
 import com.firstProject.model.Customer;
-import com.firstProject.model.CustomerStatus;
 import org.springframework.jdbc.core.RowMapper;
 import org.springframework.stereotype.Component;
 
@@ -18,7 +17,10 @@ public class CustomerMapper implements RowMapper<Customer> {
                 rs.getString("first_name"),
                 rs.getString("last_name"),
                 rs.getString("email"),
-                CustomerStatus.valueOf(rs.getString("status"))
+                rs.getString("phone_number"),
+                rs.getString("address"),
+                rs.getString("user_name"),
+                rs.getString("password")
             );
         return customer;
     }

@@ -2,14 +2,13 @@ package com.firstProject.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.firstProject.model.Customer;
-import com.firstProject.model.CustomerStatus;
+import com.firstProject.model.Item;
 import com.firstProject.repository.CustomerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-import static com.firstProject.service.ConstVariables.ALLOWED_VIP_CUSTOMERS_AMOUNT;
 
 @Service
 public class CustomerServiceImpl implements CustomerService {
@@ -18,30 +17,17 @@ public class CustomerServiceImpl implements CustomerService {
     private CustomerRepository customerRepository;
 
     @Override
-    public Long createCustomer(Customer customer) throws JsonProcessingException {
-        if(customer.getCustomerStatus() == CustomerStatus.VIP){
-            if(allowVip()){
-                return customerRepository.createCustomer(customer);
-            } else {
-                System.out.println("Could not create new VIP customer, out of limit");
-                return null;
-            }
-        } else {
-            return customerRepository.createCustomer(customer);
+    public Long createCustomer(Customer customer) throws Exception {
+        Customer existingCustomUser = customerRepository.findUserByUsername(customer.getUserName());
+        if(existingCustomUser != null){
+            throw new Exception("Username " + customer.getUserName() + " is already taken");
         }
+            return customerRepository.createCustomer(customer);
     }
 
     @Override
     public void updateCustomer(Customer customer) {
-        if(customer.getCustomerStatus() == CustomerStatus.VIP){
-            if(allowVip()){
-                customerRepository.updateCustomer(customer);
-            } else {
-                System.out.println("Could not update new VIP customer, out of limit");
-            }
-        } else {
             customerRepository.updateCustomer(customer);
-        }
     }
 
     @Override
@@ -53,19 +39,13 @@ public class CustomerServiceImpl implements CustomerService {
     public Customer getCustomerById(Long id) throws JsonProcessingException {
         return customerRepository.getCustomerById(id);
     }
-
     @Override
-    public List<Customer> getAllCustomersByFirstName(String firstName) {
-        return customerRepository.getAllCustomersByFirstName(firstName);
+    public List<Customer> getAllCustomer() throws JsonProcessingException{
+        return customerRepository.getAllCustomer();
     }
-
     @Override
-    public List<Long> getAllCustomerIdsByFirstName(String firstName) {
-        return customerRepository.getAllCustomerIdsByFirstName(firstName);
+    public Customer findUserByUsername(String username){
+        return customerRepository.findUserByUsername(username);
     }
 
-    private boolean allowVip(){
-        List<Customer> vipCustomers = customerRepository.getAllCustomersByStatus(CustomerStatus.VIP);
-        return (vipCustomers.size() < ALLOWED_VIP_CUSTOMERS_AMOUNT);
-    }
 }
