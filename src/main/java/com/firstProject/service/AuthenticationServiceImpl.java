@@ -1,5 +1,6 @@
 package com.firstProject.service;
 
+import com.firstProject.model.Customer;
 import com.firstProject.security.CustomerDetailsService;
 import com.firstProject.security.model.AuthenticationRequest;
 import com.firstProject.security.model.AuthenticationResponse;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class AuthenticationServiceImpl implements AuthenticationService {
     @Autowired
-    private CustomerDetailsService myUserDetailsService;
+    private CustomerDetailsService customerDetailsService;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -23,18 +24,18 @@ public class AuthenticationServiceImpl implements AuthenticationService {
 
     @Override
     public AuthenticationResponse createAuthenticationToken(AuthenticationRequest authenticationRequest) throws Exception {
-        try {
-            authenticationManager.authenticate(
-                    new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
-            );
-        } catch (Exception exception){
-            throw new Exception("Incorrect Username Or Password");
-        }
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(authenticationRequest.getUsername(), authenticationRequest.getPassword())
+        );
 
-        UserDetails userDetails = myUserDetailsService.loadUserByUsername(authenticationRequest.getUsername());
-        String jwt = jwtUtil.generateToken(userDetails);
-        String username = authenticationRequest.getUsername();
-        return new AuthenticationResponse(jwt, username);
+        final UserDetails userDetails = customerDetailsService.loadUserByUsername(authenticationRequest.getUsername());
+        final String jwt = jwtUtil.generateToken(userDetails);
+
+        // Fetch the customer details from the CustomerDetailsService
+        Customer customer = customerDetailsService.getCustomerByUsername(authenticationRequest.getUsername());
+
+        // Return the response with the full customer object
+        return new AuthenticationResponse(jwt, customer);
     }
 }
 

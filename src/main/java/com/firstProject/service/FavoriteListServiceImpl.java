@@ -24,8 +24,8 @@ public class FavoriteListServiceImpl implements FavoriteListService{
     }
 
     @Override
-    public void deleteFavoriteListById(Long id) {
-        favoriteListRepository.deleteFavoriteListById(id);
+    public void deleteFavoriteList(Long customerId, Long itemId) {
+        favoriteListRepository.deleteFavoriteList(customerId, itemId);
     }
 
     @Override

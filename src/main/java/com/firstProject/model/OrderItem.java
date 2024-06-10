@@ -6,6 +6,8 @@ public class OrderItem {
     private Long itemId;
     private Long quantity;
 
+    public OrderItem() {
+    }
 
     public OrderItem(Long orderItemId, Long orderId, Long itemId, Long quantity ) {
       this.orderItemId=orderItemId;

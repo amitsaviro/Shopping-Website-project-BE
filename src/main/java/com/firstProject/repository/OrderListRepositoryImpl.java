@@ -8,8 +8,14 @@ import com.firstProject.repository.cache.CacheRepository;
 import com.firstProject.repository.mapper.OrderItemMapper;
 import com.firstProject.repository.mapper.OrderListMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.EmptyResultDataAccessException;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
+
+import java.util.Collections;
+import java.util.List;
 
 
 @Repository
@@ -31,10 +37,16 @@ public class OrderListRepositoryImpl implements OrderListRepository{
     private ObjectMapper objectMapper;
 
     @Override
-    public Long createOrderList(OrderList orderList) throws JsonProcessingException {
-        String sql = "INSERT INTO " + ORDER_LIST_TABLE_NAME + " (customer_id, order_date, shipping_address, total_price, status) VALUES (?, ?, ?, ?, ?)";
-        jdbcTemplate.update(sql, orderList.getCustomerId(), orderList.getOrderDate(), orderList.getShippingAddress(), orderList.getTotalPrice(), orderList.getStatus().name());
-        return jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
+    public ResponseEntity<Long> createOrderList(OrderList orderList) {
+        try {
+            String sql = "INSERT INTO " + ORDER_LIST_TABLE_NAME + " (customer_id, order_date, shipping_address, total_price, status) VALUES (?, ?, ?, ?, ?)";
+            jdbcTemplate.update(sql, orderList.getCustomerId(), orderList.getOrderDate(), orderList.getShippingAddress(), orderList.getTotalPrice(), orderList.getStatus().name());
+
+            Long orderListId = jdbcTemplate.queryForObject("SELECT LAST_INSERT_ID();", Long.class);
+            return ResponseEntity.ok(orderListId);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @Override
@@ -76,7 +88,15 @@ public class OrderListRepositoryImpl implements OrderListRepository{
         //  }
         //  }
     }
-
+    public List<OrderList> getOrderListByCustomerId(Long customerId) throws JsonProcessingException {
+        String sql = "SELECT * FROM " + ORDER_LIST_TABLE_NAME + " WHERE customer_id=?";
+            return jdbcTemplate.query(sql, orderListMapper, customerId);
+    }
+    @Override
+    public OrderList getTempOrderListByCustomerId(Long customerId) throws JsonProcessingException {
+        String sql = "SELECT * FROM " + ORDER_LIST_TABLE_NAME + " WHERE customer_id=? AND status='TEMP' LIMIT 1";
+            return jdbcTemplate.queryForObject(sql, orderListMapper, customerId);
+    }
     //  private String createCustomerIdCacheKey(Long customerId){
     //  return "customer.id: " + customerId;
     //  }

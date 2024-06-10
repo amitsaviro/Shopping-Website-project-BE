@@ -10,7 +10,7 @@ import java.util.List;
 public interface FavoriteListService {
     Long createFavoriteList(FavoriteList favoriteList) throws JsonProcessingException;
     void updateFavoriteList(FavoriteList favoriteList);
-    void deleteFavoriteListById(Long id);
+    void deleteFavoriteList(Long customerId, Long itemId);
     FavoriteList getFavoriteListById(Long id) throws JsonProcessingException;
     List<FavoriteList> getFavoriteItemsByCustomerId(Long customerId) throws JsonProcessingException;
 }

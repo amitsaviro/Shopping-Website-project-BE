@@ -30,12 +30,12 @@ public class OrderItemController {
         orderItemService.deleteOrderItemById(orderItemId);
     }
 
-    @GetMapping("get/{orderItemId}")
+    @GetMapping("/get/{orderItemId}")
     public OrderItem getOrderItemById(@PathVariable Long orderItemId) throws JsonProcessingException {
         return orderItemService.getOrderItemById(orderItemId);
     }
 
-    @GetMapping("getAllItemsByOrderListId/{orderListId}")
+    @GetMapping("/getAllItemsByOrderListId/{orderListId}")
     public List<OrderItem> getOrderItemsByOrderListId(@PathVariable Long orderListId) throws JsonProcessingException {
         return orderItemService.getOrderItemsByOrderListId(orderListId);
     }

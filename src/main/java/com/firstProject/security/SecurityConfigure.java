@@ -35,12 +35,16 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/authenticate/create").permitAll()
                 .antMatchers("/item/**").permitAll()
                 .antMatchers("/customer/**").permitAll()
+                .antMatchers("/orderItem/**").permitAll()
+                .antMatchers("/orderList/**").permitAll()
+                .antMatchers("/favoriteList/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
         http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+
     }
 
     @Override

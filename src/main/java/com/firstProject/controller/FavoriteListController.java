@@ -27,12 +27,13 @@ public class FavoriteListController {
         favoriteListService.updateFavoriteList(favoriteList);
     }
 
-    @DeleteMapping("/delete/{favoriteListId}")
-    public void deleteFavoriteListById(@PathVariable Long favoriteListId){
-        favoriteListService.deleteFavoriteListById(favoriteListId);
+    @DeleteMapping("/delete/{customerId}/{itemId}")
+    public void deleteFavoriteList(@PathVariable Long customerId, @PathVariable Long itemId){
+        favoriteListService.deleteFavoriteList(customerId, itemId);
     }
 
-    @GetMapping("get/{favoriteListId}")
+
+    @GetMapping("/get/{favoriteListId}")
     public FavoriteList getFavoriteListById(@PathVariable Long favoriteListId) throws JsonProcessingException {
         return favoriteListService.getFavoriteListById(favoriteListId);
     }
