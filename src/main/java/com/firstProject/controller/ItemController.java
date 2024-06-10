@@ -31,7 +31,7 @@ public class ItemController {
         itemService.deleteItemById(itemId);
     }
 
-    @GetMapping("get/{itemId}")
+    @GetMapping("/get/{itemId}")
     public Item getItemById(@PathVariable Long itemId) throws JsonProcessingException {
         return itemService.getItemById(itemId);
     }

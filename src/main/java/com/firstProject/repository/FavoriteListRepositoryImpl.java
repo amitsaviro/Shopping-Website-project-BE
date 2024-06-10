@@ -44,14 +44,11 @@ public class FavoriteListRepositoryImpl implements FavoriteListRepository{
     }
 
     @Override
-    public void deleteFavoriteListById(Long id) {
-        // String cacheKey = createCustomerIdCacheKey(id);
-        // if(cacheRepository.isKeyExists(cacheKey)){
-        //    cacheRepository.removeCacheEntity(cacheKey);
-        //  }
-        String sql = "DELETE FROM " + FAVORITE_LIST_TABLE_NAME + " WHERE favorite_list_id=?";
-        jdbcTemplate.update(sql, id);
+    public void deleteFavoriteList(Long customerId, Long itemId) {
+        String sql = "DELETE FROM " + FAVORITE_LIST_TABLE_NAME + " WHERE customer_id=? AND item_id=?";
+        jdbcTemplate.update(sql, customerId, itemId);
     }
+
 
     @Override
     public FavoriteList getFavoriteListById(Long id) throws JsonProcessingException {

@@ -42,7 +42,7 @@ public class CustomerController {
         return customerService.getAllCustomer();
     }
 
-    @GetMapping("getUserName/{username}")
+    @GetMapping("/getUserName/{username}")
     public Customer findUserByUsername(@PathVariable String username) throws JsonProcessingException {
         return customerService.findUserByUsername(username);
     }
