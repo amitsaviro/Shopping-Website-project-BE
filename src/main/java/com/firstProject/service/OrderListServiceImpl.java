@@ -22,8 +22,13 @@ public class OrderListServiceImpl implements OrderListService{
     }
 
     @Override
-    public void updateOrderList(OrderList orderList) {
+    public ResponseEntity<Void> updateOrderList(Long orderListId, OrderList orderList) {
+        orderList.setOrderListId(orderListId);
+        orderList.setOrderDate(LocalDate.now().toString());
+
         orderListRepository.updateOrderList(orderList);
+
+        return ResponseEntity.ok().build();
     }
 
     @Override

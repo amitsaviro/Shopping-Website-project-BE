@@ -5,6 +5,8 @@ import com.firstProject.model.Item;
 import com.firstProject.model.OrderItem;
 import com.firstProject.service.ItemService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,10 +22,14 @@ public class ItemController {
     public void createItem(@RequestBody Item item) throws JsonProcessingException {
         itemService.createItem(item);
     }
-
-    @PutMapping("/update")
-    public void updateItem(@RequestBody Item item){
-        itemService.updateItem(item);
+    @PutMapping("/update/{itemId}")
+    public ResponseEntity<String> updateItem(@PathVariable Long itemId, @RequestBody Item item) {
+        try {
+            itemService.updateItem(itemId, item);
+            return ResponseEntity.ok("Item updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error updating item: " + e.getMessage());
+        }
     }
 
     @DeleteMapping("/delete/{itemId}")

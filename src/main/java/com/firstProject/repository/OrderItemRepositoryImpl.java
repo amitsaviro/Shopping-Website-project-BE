@@ -76,10 +76,16 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
         //  }
     }
     @Override
-    public List<OrderItem> getOrderItemsByOrderListId(Long orderListId) throws JsonProcessingException {
+    public List<OrderItem> getOrderItemsByOrderListId(Long orderId) throws JsonProcessingException {
         String sql = "SELECT * FROM " +ORDER_ITEM_TABLE_NAME + " WHERE order_id=?";
-            return jdbcTemplate.query(sql, orderItemMapper, orderListId);
+            return jdbcTemplate.query(sql, orderItemMapper, orderId);
     }
+    @Override
+    public void deleteAllOrderItemByOrderListId(Long orderId) {
+        String sql = "DELETE FROM " + ORDER_ITEM_TABLE_NAME + " WHERE order_id=?";
+        jdbcTemplate.update(sql, orderId);
+    }
+
     //  private String createCustomerIdCacheKey(Long customerId){
     //  return "customer.id: " + customerId;
     //  }

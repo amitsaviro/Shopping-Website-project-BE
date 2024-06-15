@@ -33,7 +33,11 @@ public class OrderItemServiceImpl implements OrderItemService{
         return orderItemRepository.getOrderItemById(id);
     }
     @Override
-    public List<OrderItem> getOrderItemsByOrderListId(Long orderListId) throws JsonProcessingException{
-        return orderItemRepository.getOrderItemsByOrderListId(orderListId);
+    public List<OrderItem> getOrderItemsByOrderListId(Long orderId) throws JsonProcessingException{
+        return orderItemRepository.getOrderItemsByOrderListId(orderId);
+    }
+    @Override
+    public void deleteAllOrderItemByOrderListId(Long orderId){
+       orderItemRepository.deleteAllOrderItemByOrderListId(orderId);
     }
 }
