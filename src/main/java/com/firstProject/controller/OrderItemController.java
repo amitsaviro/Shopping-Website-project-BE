@@ -39,5 +39,9 @@ public class OrderItemController {
     public List<OrderItem> getOrderItemsByOrderListId(@PathVariable Long orderListId) throws JsonProcessingException {
         return orderItemService.getOrderItemsByOrderListId(orderListId);
     }
+    @DeleteMapping("/deleteAllOrderItemByOrderListId/{orderId}")
+    public void deleteAllOrderItemByOrderListId(@PathVariable Long orderId) {
+        orderItemService.deleteAllOrderItemByOrderListId(orderId);
+    }
 }
 

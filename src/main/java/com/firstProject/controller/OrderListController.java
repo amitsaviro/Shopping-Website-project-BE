@@ -23,10 +23,11 @@ public class OrderListController {
     }
 
 
-    @PutMapping("/update")
-    public void updateOrderList(@RequestBody OrderList orderList) {
-        orderListService.updateOrderList(orderList);
+    @PutMapping("/update/{orderListId}")
+    public ResponseEntity<Void> updateOrderList(@PathVariable Long orderListId, @RequestBody OrderList orderList) {
+        return orderListService.updateOrderList(orderListId, orderList);
     }
+
 
     @DeleteMapping("/delete/{orderListId}")
     public void deleteOrderListById(@PathVariable Long orderListId) {

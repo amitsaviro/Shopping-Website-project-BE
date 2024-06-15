@@ -54,7 +54,7 @@ CREATE TABLE favorite_list (
     PRIMARY KEY (favorite_list_id)
 );
 
-INSERT INTO item (item_name, old_price, price, img_url, category, stock)
+INSERT INTO item (item_name, price, old_price, img_url, category, stock)
 VALUES
     ('Classic Ball', 49.90, 70.00, 'logo.png', 'football', 10),
     ('Green & Red Ball', 55.00, 60.90, 'greenRed.png', 'football', 0),

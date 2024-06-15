@@ -11,5 +11,6 @@ public interface OrderItemService {
     void updateOrderItem(OrderItem orderItem);
     void deleteOrderItemById(Long id);
     OrderItem getOrderItemById(Long id) throws JsonProcessingException;
-    List<OrderItem> getOrderItemsByOrderListId(Long orderListId) throws JsonProcessingException;
+    List<OrderItem> getOrderItemsByOrderListId(Long orderId) throws JsonProcessingException;
+    void deleteAllOrderItemByOrderListId(Long orderId);
 }

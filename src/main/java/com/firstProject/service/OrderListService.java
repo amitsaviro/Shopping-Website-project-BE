@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface OrderListService {
     ResponseEntity<Long> createOrderList(OrderList orderList) throws Exception;
-    void updateOrderList(OrderList orderList);
+    ResponseEntity<Void> updateOrderList(Long orderListId, OrderList orderList);
     void deleteOrderListById(Long id);
     OrderList getOrderListById(Long id) throws JsonProcessingException;
     List<OrderList> getOrderListByCustomerId(Long customerId) throws JsonProcessingException;

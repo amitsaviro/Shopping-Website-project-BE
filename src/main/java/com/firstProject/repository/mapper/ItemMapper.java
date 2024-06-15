@@ -15,8 +15,8 @@ public class ItemMapper implements RowMapper<Item> {
         Item item = new Item(
                 rs.getLong("item_id"),
                 rs.getString("item_name"),
-                rs.getBigDecimal("old_price"),
                 rs.getBigDecimal("price"),
+                rs.getBigDecimal("old_price"),
                 rs.getString("img_url"),
                 rs.getString("category"),
                 rs.getLong("stock")

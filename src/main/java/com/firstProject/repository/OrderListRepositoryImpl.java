@@ -51,15 +51,13 @@ public class OrderListRepositoryImpl implements OrderListRepository{
 
     @Override
     public void updateOrderList(OrderList orderList) {
-        //String cacheKey = createCustomerIdCacheKey(customer.getId());
-        //if(cacheRepository.isKeyExists(cacheKey)){
-        //     cacheRepository.removeCacheEntity(cacheKey);
-        //  }
         String sql = "UPDATE " + ORDER_LIST_TABLE_NAME + " SET customer_id=?, order_date=?, shipping_address=?, total_price=?, status=? WHERE order_list_id=?";
         jdbcTemplate.update(sql, orderList.getCustomerId(), orderList.getOrderDate(), orderList.getShippingAddress(), orderList.getTotalPrice(), orderList.getStatus().name(), orderList.getOrderListId());
     }
 
-    @Override
+
+
+@Override
     public void deleteOrderListById(Long id) {
         // String cacheKey = createCustomerIdCacheKey(id);
         // if(cacheRepository.isKeyExists(cacheKey)){
