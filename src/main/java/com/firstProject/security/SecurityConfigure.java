@@ -1,10 +1,10 @@
 package com.firstProject.security;
 
-
 import com.firstProject.security.filter.JwtRequestFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,7 +24,7 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
     private JwtRequestFilter jwtRequestFilter;
 
     @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception{
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(customUserDetailsService);
     }
 
@@ -32,19 +32,19 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .headers().frameOptions().disable()
-                .authorizeRequests().antMatchers("/authenticate/create").permitAll()
+                .authorizeRequests()
+                .antMatchers("/authenticate/create").permitAll()
                 .antMatchers("/item/**").permitAll()
                 .antMatchers("/customer/**").permitAll()
-                .antMatchers("/orderItem/**").permitAll()
-                .antMatchers("/orderList/**").permitAll()
-                .antMatchers("/favoriteList/**").permitAll()
                 .antMatchers("/h2-console/**").permitAll()
+                .antMatchers(HttpMethod.OPTIONS, "/**").permitAll()  // Allow preflight requests
+                .antMatchers("/favoriteList/**").authenticated() // Require authentication for /favoriteList
                 .anyRequest().authenticated()
                 .and()
                 .sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
     }
 
     @Override
@@ -53,6 +53,3 @@ public class SecurityConfigure extends WebSecurityConfigurerAdapter {
         return super.authenticationManager();
     }
 }
-
-
-
