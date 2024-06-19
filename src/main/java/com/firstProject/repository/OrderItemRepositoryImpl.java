@@ -4,7 +4,6 @@ package com.firstProject.repository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firstProject.model.OrderItem;
-import com.firstProject.repository.cache.CacheRepository;
 import com.firstProject.repository.mapper.OrderItemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -24,9 +23,6 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
     private OrderItemMapper orderItemMapper;
 
     @Autowired
-    private CacheRepository cacheRepository;
-
-    @Autowired
     private ObjectMapper objectMapper;
 
     @Override
@@ -38,42 +34,21 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
 
     @Override
     public void updateOrderItem(OrderItem orderItem) {
-        //String cacheKey = createCustomerIdCacheKey(customer.getId());
-        //if(cacheRepository.isKeyExists(cacheKey)){
-        //     cacheRepository.removeCacheEntity(cacheKey);
-        //  }
         String sql = "UPDATE " + ORDER_ITEM_TABLE_NAME + " SET order_id=?, item_id=?, quantity=? WHERE order_item_id=?";
         jdbcTemplate.update(sql, orderItem.getOrderId(), orderItem.getItemId(), orderItem.getQuantity(), orderItem.getOrderItemId());
     }
 
     @Override
     public void deleteOrderItemById(Long id) {
-        // String cacheKey = createCustomerIdCacheKey(id);
-        // if(cacheRepository.isKeyExists(cacheKey)){
-        //    cacheRepository.removeCacheEntity(cacheKey);
-        //  }
         String sql = "DELETE FROM " + ORDER_ITEM_TABLE_NAME + " WHERE order_item_id=?";
         jdbcTemplate.update(sql, id);
     }
 
     @Override
     public OrderItem getOrderItemById(Long id) throws JsonProcessingException {
-        // String cacheKey = createCustomerIdCacheKey(id);
-        //  if(cacheRepository.isKeyExists(cacheKey)){
-        // String customer = cacheRepository.getCacheEntity(cacheKey);
-        // return objectMapper.readValue(customer, Customer.class);
-        //  } else {
         String sql = "SELECT * FROM " + ORDER_ITEM_TABLE_NAME + " WHERE order_item_id=?";
-        //  try {
         OrderItem orderItem = jdbcTemplate.queryForObject(sql, orderItemMapper, id);
-        //  String customerAsString = objectMapper.writeValueAsString(customer);
-        //   cacheRepository.createCacheEntity(cacheKey, customerAsString);
         return orderItem;
-        //  } catch (EmptyResultDataAccessException e) {
-        //    System.out.println("Empty Data Warning");
-        //   return null;
-        //  }
-        //  }
     }
     @Override
     public List<OrderItem> getOrderItemsByOrderListId(Long orderId) throws JsonProcessingException {
@@ -85,8 +60,4 @@ public class OrderItemRepositoryImpl implements OrderItemRepository {
         String sql = "DELETE FROM " + ORDER_ITEM_TABLE_NAME + " WHERE order_id=?";
         jdbcTemplate.update(sql, orderId);
     }
-
-    //  private String createCustomerIdCacheKey(Long customerId){
-    //  return "customer.id: " + customerId;
-    //  }
 }

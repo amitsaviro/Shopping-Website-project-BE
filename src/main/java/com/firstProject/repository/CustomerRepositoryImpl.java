@@ -3,8 +3,6 @@ package com.firstProject.repository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firstProject.model.Customer;
-import com.firstProject.model.Item;
-import com.firstProject.repository.cache.CacheRepository;
 import com.firstProject.repository.mapper.CustomerMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
@@ -23,9 +21,6 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
     @Autowired
     private CustomerMapper customerMapper;
-
-    @Autowired
-    private CacheRepository cacheRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -48,10 +43,6 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
     @Override
     public void updateCustomer(Customer customer) {
-        //String cacheKey = createCustomerIdCacheKey(customer.getId());
-        //if(cacheRepository.isKeyExists(cacheKey)){
-       //     cacheRepository.removeCacheEntity(cacheKey);
-      //  }
         String sql = "UPDATE " + CUSTOMER_TABLE_NAME + " SET first_name=?, last_name=?, email=?, phone_number=?, address=?, user_name=?, password=? WHERE id=?";
         jdbcTemplate.update(
             sql,
@@ -68,32 +59,15 @@ public class CustomerRepositoryImpl implements CustomerRepository {
 
     @Override
     public void deleteCustomerById(Long id) {
-       // String cacheKey = createCustomerIdCacheKey(id);
-       // if(cacheRepository.isKeyExists(cacheKey)){
-        //    cacheRepository.removeCacheEntity(cacheKey);
-      //  }
         String sql = "DELETE FROM " + CUSTOMER_TABLE_NAME + " WHERE id=?";
         jdbcTemplate.update(sql, id);
     }
 
     @Override
     public Customer getCustomerById(Long id) throws JsonProcessingException {
-       // String cacheKey = createCustomerIdCacheKey(id);
-      //  if(cacheRepository.isKeyExists(cacheKey)){
-           // String customer = cacheRepository.getCacheEntity(cacheKey);
-           // return objectMapper.readValue(customer, Customer.class);
-      //  } else {
             String sql = "SELECT * FROM " + CUSTOMER_TABLE_NAME + " WHERE id=?";
-          //  try {
                 Customer customer = jdbcTemplate.queryForObject(sql, customerMapper, id);
-              //  String customerAsString = objectMapper.writeValueAsString(customer);
-             //   cacheRepository.createCacheEntity(cacheKey, customerAsString);
                 return customer;
-          //  } catch (EmptyResultDataAccessException e) {
-            //    System.out.println("Empty Data Warning");
-             //   return null;
-          //  }
-      //  }
     }
     @Override
     public List<Customer> getAllCustomer() throws JsonProcessingException {
@@ -109,9 +83,6 @@ public class CustomerRepositoryImpl implements CustomerRepository {
             return null;
         }
     }
-  //  private String createCustomerIdCacheKey(Long customerId){
-      //  return "customer.id: " + customerId;
-  //  }
 }
 
 
