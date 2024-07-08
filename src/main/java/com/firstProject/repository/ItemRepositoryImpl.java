@@ -3,8 +3,6 @@ package com.firstProject.repository;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.firstProject.model.Item;
-import com.firstProject.model.OrderItem;
-import com.firstProject.repository.cache.CacheRepository;
 import com.firstProject.repository.mapper.ItemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -21,9 +19,6 @@ public class ItemRepositoryImpl implements ItemRepository{
 
     @Autowired
     private ItemMapper itemMapper;
-
-    @Autowired
-    private CacheRepository cacheRepository;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -45,10 +40,6 @@ public class ItemRepositoryImpl implements ItemRepository{
 
     @Override
     public void updateItem(Item item) {
-        //String cacheKey = createCustomerIdCacheKey(customer.getId());
-        //if(cacheRepository.isKeyExists(cacheKey)){
-        //     cacheRepository.removeCacheEntity(cacheKey);
-        //  }
         String sql = "UPDATE " + ITEM_TABLE_NAME + " SET item_name=?, price=?, old_price=?, img_url=?, category=?, stock=? WHERE item_id=?";
         jdbcTemplate.update(
                 sql,
@@ -64,39 +55,19 @@ public class ItemRepositoryImpl implements ItemRepository{
 
     @Override
     public void deleteItemById(Long id) {
-        // String cacheKey = createCustomerIdCacheKey(id);
-        // if(cacheRepository.isKeyExists(cacheKey)){
-        //    cacheRepository.removeCacheEntity(cacheKey);
-        //  }
         String sql = "DELETE FROM " + ITEM_TABLE_NAME + " WHERE item_id=?";
         jdbcTemplate.update(sql, id);
     }
 
     @Override
     public Item getItemById(Long id) throws JsonProcessingException {
-        // String cacheKey = createCustomerIdCacheKey(id);
-        //  if(cacheRepository.isKeyExists(cacheKey)){
-        // String customer = cacheRepository.getCacheEntity(cacheKey);
-        // return objectMapper.readValue(customer, Customer.class);
-        //  } else {
         String sql = "SELECT * FROM " + ITEM_TABLE_NAME + " WHERE item_id=?";
-        //  try {
         Item item = jdbcTemplate.queryForObject(sql, itemMapper, id);
-        //  String customerAsString = objectMapper.writeValueAsString(customer);
-        //   cacheRepository.createCacheEntity(cacheKey, customerAsString);
         return item;
-        //  } catch (EmptyResultDataAccessException e) {
-        //    System.out.println("Empty Data Warning");
-        //   return null;
-        //  }
-        //  }
     }
     @Override
     public List<Item> getAllItems() throws JsonProcessingException {
         String sql = "SELECT * FROM " +ITEM_TABLE_NAME;
         return jdbcTemplate.query(sql, itemMapper);
     }
-    //  private String createCustomerIdCacheKey(Long customerId){
-    //  return "customer.id: " + customerId;
-    //  }
 }
