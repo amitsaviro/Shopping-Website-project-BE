@@ -46,13 +46,21 @@ List the technologies and frameworks used in your project.
 
 ## Installation
 
-Provide instructions on how to clone and set up your project locally.
+### Prerequisites
+
+- **Java**: the project targets **Java 11** (Spring Boot 2.4.0 / Gradle 7.5). You don't need to have JDK 11 pre-installed — the Gradle wrapper is configured with a [toolchain](build.gradle) that auto-downloads a matching JDK for compiling and running the app.
+- However, **Gradle 7.5 itself needs a JDK already on your machine to start** (any JDK 8 through ~18 works). If your machine only has a very new JDK (21+), see [Troubleshooting](#troubleshooting) below.
+
+### Clone and build
 
 ```bash
 git clone https://github.com/amitsaviro/Shopping-Website-project-BE.git
 cd Shopping-Website-project-BE
 ./gradlew build
- ```
+```
+
+On Windows, use `gradlew.bat build` instead.
+
 ---
 ## Setup
 Before running the server, make sure to set up the following configuration:
@@ -60,6 +68,26 @@ Before running the server, make sure to set up the following configuration:
 - Modify application.properties file to configure database connection details (spring.datasource.url, spring.datasource.username, spring.datasource.password).
 - Configure JWT secret key in the application properties (jwt.secret)
 - Any other setup steps specific to your project.
+
+### Troubleshooting
+
+**Error: `Unsupported class file major version ...` when running any `./gradlew` command.**
+
+This means the JDK on your machine is too new for Gradle 7.5 to launch (this happens on machines where only JDK 21+ is installed). Fix:
+
+```bash
+# macOS (Homebrew)
+brew install openjdk@17
+
+# then either export it for your shell session:
+export JAVA_HOME=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home
+
+# or create a local (git-ignored) gradle.properties in the project root:
+echo "org.gradle.java.home=/opt/homebrew/opt/openjdk@17/libexec/openjdk.jdk/Contents/Home" > gradle.properties
+```
+
+On Linux, install via your package manager (e.g. `sudo apt install openjdk-17-jdk`) or [SDKMAN!](https://sdkman.io/). On Windows, install [Eclipse Temurin 17](https://adoptium.net/) and set `JAVA_HOME` accordingly.
+
 ---
 ## API Endpoints 
 Document the APIs provided by your backend.
@@ -255,7 +283,17 @@ To start the server locally, follow these steps:
 ```bash
 ./gradlew bootRun
 ```
+(Windows: `gradlew.bat bootRun`)
+
 3. The server will start locally at `http://localhost:8080`.
+
+### Other useful commands
+
+```bash
+./gradlew build   # compile, run tests, package the jar
+./gradlew test    # run tests only
+./gradlew clean   # remove build output
+```
 
 ---
 
